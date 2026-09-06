@@ -461,3 +461,83 @@ def governance_proposal_metadata_by_gov_action_id(self, gov_action_id: str, **kw
         url=f"{self.url}/governance/proposals/{gov_action_id}/metadata",
         headers=self.default_headers
     )
+
+
+@request_wrapper
+def governance_committee(self, **kwargs):
+    """
+    Return information about the constitutional committee.
+
+    https://docs.blockfrost.io/#tag/cardano--governance/GET/governance/committee
+
+    :param return_type: Optional. "object", "json" or "pandas". Default: "object".
+    :type return_type: str
+    :returns object.
+    :rtype: Namespace
+    :raises ApiError: If API fails
+    :raises Exception: If the API response is somehow malformed.
+    """
+    return requests.get(
+        url=f"{self.url}/governance/committee",
+        headers=self.default_headers
+    )
+
+
+@list_request_wrapper
+def governance_committee_votes(self, **kwargs):
+    """
+    Return the votes cast by the constitutional committee.
+
+    https://docs.blockfrost.io/#tag/cardano--governance/GET/governance/committee/votes
+
+    :param return_type: Optional. "object", "json" or "pandas". Default: "object".
+    :type return_type: str
+    :param gather_pages: Optional. Default: false. Will collect all pages into one return
+    :type gather_pages: bool
+    :param count: Optional. Default: 100. The number of results displayed on one page.
+    :type count: int
+    :param page: Optional. The page number for listing the results.
+    :type page: int
+    :param order: Optional. "asc" or "desc". Default: "asc".
+    :type order: str
+    :returns A list of objects.
+    :rtype [Namespace]
+    :raises ApiError: If API fails
+    :raises Exception: If the API response is somehow malformed.
+    """
+    return requests.get(
+        url=f"{self.url}/governance/committee/votes",
+        params=self.query_parameters(kwargs),
+        headers=self.default_headers
+    )
+
+
+@list_request_wrapper
+def governance_committee_member_votes(self, cc_id: str, **kwargs):
+    """
+    Return the votes cast by a specific constitutional committee member.
+
+    https://docs.blockfrost.io/#tag/cardano--governance/GET/governance/committee/{cc_id}/votes
+
+    :param cc_id: The constitutional committee member hot or cold ID (Bech32 or hex encoded).
+    :type cc_id: str
+    :param return_type: Optional. "object", "json" or "pandas". Default: "object".
+    :type return_type: str
+    :param gather_pages: Optional. Default: false. Will collect all pages into one return
+    :type gather_pages: bool
+    :param count: Optional. Default: 100. The number of results displayed on one page.
+    :type count: int
+    :param page: Optional. The page number for listing the results.
+    :type page: int
+    :param order: Optional. "asc" or "desc". Default: "asc".
+    :type order: str
+    :returns A list of objects.
+    :rtype [Namespace]
+    :raises ApiError: If API fails
+    :raises Exception: If the API response is somehow malformed.
+    """
+    return requests.get(
+        url=f"{self.url}/governance/committee/{cc_id}/votes",
+        params=self.query_parameters(kwargs),
+        headers=self.default_headers
+    )

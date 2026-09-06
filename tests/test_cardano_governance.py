@@ -8,6 +8,7 @@ cert_index = 0
 # proposal with metadata (treasury_withdrawals type)
 metadata_tx_hash = '60ed6ab43c840ff888a8af30a1ed27b41e9f4a91a89822b2b63d1bfc52aeec45'
 gov_action_id = 'gov_action1zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zyg3zygsq6dmejn'
+cc_hot_id = 'cc_hot1qgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqsq9wr79'
 
 
 def test_governance_dreps(requests_mock):
@@ -375,3 +376,90 @@ def test_integration_governance_proposal_metadata_by_gov_action_id():
     if os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'):
         api = BlockFrostApi(project_id=os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'))
         api.governance_proposal_metadata_by_gov_action_id(gov_action_id=gov_action_id)
+
+
+def test_governance_committee(requests_mock):
+    api = BlockFrostApi()
+    mock_data = {
+        "gov_action_id": gov_action_id,
+        "proposal_tx_hash": tx_hash,
+        "proposal_index": cert_index,
+        "is_dissolved": False,
+        "quorum": {
+            "numerator": 2,
+            "denominator": 3
+        },
+        "members": [
+            {
+                "cold_id": "cc_cold1zgqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqsq7q4kfj",
+                "hot_id": cc_hot_id,
+                "has_script": False,
+                "expiration_epoch": 726,
+                "status": "active"
+            }
+        ]
+    }
+    requests_mock.get(f"{api.url}/governance/committee", json=mock_data)
+    assert api.governance_committee() == convert_json_to_object(mock_data)
+
+
+def test_integration_governance_committee():
+    if os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'):
+        api = BlockFrostApi(project_id=os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'))
+        api.governance_committee()
+
+
+def test_governance_committee_votes(requests_mock):
+    api = BlockFrostApi()
+    mock_data = [
+        {
+            "tx_hash": tx_hash,
+            "voter_hot_id": cc_hot_id,
+            "proposal_id": gov_action_id,
+            "proposal_tx_hash": tx_hash,
+            "proposal_index": cert_index,
+            "governance_type": "treasury_withdrawals",
+            "vote": "yes",
+            "metadata_url": None,
+            "metadata_hash": None,
+            "block_height": 10000000,
+            "block_time": 1700000000
+        }
+    ]
+    requests_mock.get(f"{api.url}/governance/committee/votes", json=mock_data)
+    assert api.governance_committee_votes() == convert_json_to_object(mock_data)
+
+
+def test_integration_governance_committee_votes():
+    if os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'):
+        api = BlockFrostApi(project_id=os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'))
+        api.governance_committee_votes()
+
+
+def test_governance_committee_member_votes(requests_mock):
+    api = BlockFrostApi()
+    mock_data = [
+        {
+            "tx_hash": tx_hash,
+            "voter_hot_id": cc_hot_id,
+            "proposal_id": gov_action_id,
+            "proposal_tx_hash": tx_hash,
+            "proposal_index": cert_index,
+            "governance_type": "info_action",
+            "vote": "abstain",
+            "metadata_url": None,
+            "metadata_hash": None,
+            "block_height": 10000001,
+            "block_time": 1700000001
+        }
+    ]
+    requests_mock.get(
+        f"{api.url}/governance/committee/{cc_hot_id}/votes", json=mock_data)
+    assert api.governance_committee_member_votes(
+        cc_hot_id) == convert_json_to_object(mock_data)
+
+
+def test_integration_governance_committee_member_votes():
+    if os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'):
+        api = BlockFrostApi(project_id=os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'))
+        api.governance_committee_member_votes(cc_hot_id)

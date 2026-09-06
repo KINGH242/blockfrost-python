@@ -167,6 +167,9 @@ class BlockFrostApi(Api):
         governance_proposal_parameters_by_gov_action_id, \
         governance_proposal_withdrawals_by_gov_action_id, \
         governance_proposal_votes_by_gov_action_id, \
-        governance_proposal_metadata_by_gov_action_id
+        governance_proposal_metadata_by_gov_action_id, \
+        governance_committee, \
+        governance_committee_votes, \
+        governance_committee_member_votes
     from .cardano.utils import \
         utils_addresses_xpub
