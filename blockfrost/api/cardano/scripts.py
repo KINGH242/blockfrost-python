@@ -169,3 +169,34 @@ def script_datum_cbor(self, datum_hash: str, **kwargs):
         url=f"{self.url}/scripts/datum/{datum_hash}/cbor",
         headers=self.default_headers
     )
+
+
+@list_request_wrapper
+def script_utxos(self, script_hash: str, **kwargs):
+    """
+    List of UTXOs holding the script as a reference script.
+
+    https://docs.blockfrost.io/#tag/cardano--scripts/GET/scripts/{script_hash}/utxos
+
+    :param script_hash: Hash of the script.
+    :type script_hash: str
+    :param return_type: Optional. "object", "json" or "pandas". Default: "object".
+    :type return_type: str
+    :param gather_pages: Optional. Default: false. Will collect all pages into one return
+    :type gather_pages: bool
+    :param count: Optional. Default: 100. The number of results displayed on one page.
+    :type count: int
+    :param page: Optional. The page number for listing the results.
+    :type page: int
+    :param order: Optional. "asc" or "desc". Default: "asc".
+    :type order: str
+    :returns A list of objects.
+    :rtype [Namespace]
+    :raises ApiError: If API fails
+    :raises Exception: If the API response is somehow malformed.
+    """
+    return requests.get(
+        url=f"{self.url}/scripts/{script_hash}/utxos",
+        params=self.query_parameters(kwargs),
+        headers=self.default_headers
+    )

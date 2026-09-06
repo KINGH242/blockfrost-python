@@ -144,3 +144,32 @@ def test_integration_script_datum_cbor():
     if os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'):
         api = BlockFrostApi(project_id=os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'))
         assert api.script_datum_cbor(datum_hash=datum_hash)
+
+
+def test_script_utxos(requests_mock):
+    api = BlockFrostApi()
+    mock_data = [
+        {
+            "address": "addr1qxqs59lphg8g6qndelq8xwqn60ag3aeyfcp33c2kdp46a09re5df3pzwwmyq946axfcejy5n4x0y99wqpgtp2gd0k09qsgy6pz",
+            "tx_hash": "39a7a284c2a0948189dc45dec670211cd4d72f7b66c5726c08d9b3df11e44d58",
+            "output_index": 0,
+            "amount": [
+                {
+                    "unit": "lovelace",
+                    "quantity": "42000000"
+                }
+            ],
+            "block": "7eb8e27d18686c7db9a18f8bbcfe34e3fed6e047afaf2d966f9cfd5dc5b75c15",
+            "data_hash": None,
+            "inline_datum": None,
+            "reference_script_hash": script_hash
+        }
+    ]
+    requests_mock.get(f"{api.url}/scripts/{script_hash}/utxos", json=mock_data)
+    assert api.script_utxos(script_hash) == convert_json_to_object(mock_data)
+
+
+def test_integration_script_utxos():
+    if os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'):
+        api = BlockFrostApi(project_id=os.getenv('BLOCKFROST_PROJECT_ID_MAINNET'))
+        api.script_utxos(script_hash)

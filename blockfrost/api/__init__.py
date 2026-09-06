@@ -73,7 +73,8 @@ class BlockFrostApi(Api):
         asset_history, \
         asset_transactions, \
         asset_addresses, \
-        assets_policy
+        assets_policy, \
+        asset_utxos
     from .cardano.blocks import \
         block_latest, \
         block_latest_transactions, \
@@ -149,7 +150,8 @@ class BlockFrostApi(Api):
         script_cbor, \
         script_redeemers, \
         script_datum, \
-        script_datum_cbor
+        script_datum_cbor, \
+        script_utxos
     from .cardano.governance import \
         governance_dreps, \
         governance_drep, \
